@@ -254,14 +254,6 @@ OpenBSD::OpenBSD(const Driver &D, const llvm::Triple &Triple,
   getFilePaths().push_back(getDriver().SysRoot + "/usr/lib");
 }
 
-void OpenBSD::AddCXXStdlibLibArgs(const ArgList &Args,
-                                  ArgStringList &CmdArgs) const {
-  bool Profiling = Args.hasArg(options::OPT_pg);
-
-  CmdArgs.push_back(Profiling ? "-lc++_p" : "-lc++");
-  CmdArgs.push_back(Profiling ? "-lc++abi_p" : "-lc++abi");
-}
-
 Tool *OpenBSD::buildAssembler() const {
   return new tools::openbsd::Assembler(*this);
 }
@@ -275,4 +267,56 @@ void OpenBSD::addClangTargetOptions(const ArgList &DriverArgs,
   if (!DriverArgs.hasFlag(options::OPT_fuse_init_array,
                           options::OPT_fno_use_init_array, false))
     CC1Args.push_back("-fno-use-init-array");
+}
+
+ToolChain::CXXStdlibType OpenBSD::GetCXXStdlibType(const ArgList &Args) const {
+  if (Arg *A = Args.getLastArg(options::OPT_stdlib_EQ)) {
+    StringRef Value = A->getValue();
+    if (Value == "libstdc++")
+      return ToolChain::CST_Libstdcxx;
+    if (Value == "libc++")
+      return ToolChain::CST_Libcxx;
+
+    getDriver().Diag(diag::err_drv_invalid_stdlib_name) << A->getAsString(Args);
+  }
+  return ToolChain::CST_Libcxx;
+}
+
+void OpenBSD::AddClangCXXStdlibIncludeArgs(const ArgList &DriverArgs,
+                                          ArgStringList &CC1Args) const {
+  if (DriverArgs.hasArg(options::OPT_nostdlibinc) ||
+      DriverArgs.hasArg(options::OPT_nostdincxx))
+    return;
+
+  switch (GetCXXStdlibType(DriverArgs)) {
+  case ToolChain::CST_Libcxx:
+    addSystemInclude(DriverArgs, CC1Args,
+                     getDriver().SysRoot + "/usr/include/c++/v1");
+    break;
+  case ToolChain::CST_Libstdcxx:
+    std::string Triple = getTriple().str();
+    if (Triple.substr(0, 6) == "x86_64")
+      Triple.replace(0, 6, "amd64");
+    addSystemInclude(DriverArgs, CC1Args,
+                     getDriver().SysRoot + "/usr/include/g++");
+    addSystemInclude(DriverArgs, CC1Args,
+                     getDriver().SysRoot + "/usr/include/g++/" + Triple);
+    addSystemInclude(DriverArgs, CC1Args,
+                     getDriver().SysRoot + "/usr/include/g++/backward");
+    break;
+  }
+}
+
+void OpenBSD::AddCXXStdlibLibArgs(const ArgList &Args,
+                                 ArgStringList &CmdArgs) const {
+ switch (GetCXXStdlibType(Args)) {
+  case ToolChain::CST_Libcxx:
+    CmdArgs.push_back("-lc++");
+    CmdArgs.push_back("-lc++abi");
+    CmdArgs.push_back("-lpthread");
+    break;
+  case ToolChain::CST_Libstdcxx:
+    CmdArgs.push_back("-lstdc++");
+    break;
+  }
 }
