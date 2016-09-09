@@ -2727,7 +2727,7 @@ def pthreads : Flag<["-"], "pthreads">;
 def pthread : Flag<["-"], "pthread">, Flags<[CC1Option]>,
   HelpText<"Support POSIX threads in generated code">;
 def no_pthread : Flag<["-"], "no-pthread">, Flags<[CC1Option]>;
-def p : Flag<["-"], "p">;
+def p : Flag<["-"], "p">, Alias<pg>;
 def pie : Flag<["-"], "pie">;
 def static_pie : Flag<["-"], "static-pie">;
 def read__only__relocs : Separate<["-"], "read_only_relocs">;
