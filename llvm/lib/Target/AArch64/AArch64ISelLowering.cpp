@@ -13030,7 +13030,8 @@ void AArch64TargetLowering::ReplaceNodeResults(
 }
 
 bool AArch64TargetLowering::useLoadStackGuardNode() const {
-  if (Subtarget->isTargetAndroid() || Subtarget->isTargetFuchsia())
+  if (Subtarget->isTargetAndroid() || Subtarget->isTargetFuchsia() ||
+      Subtarget->isTargetOpenBSD())
     return TargetLowering::useLoadStackGuardNode();
   return true;
 }
