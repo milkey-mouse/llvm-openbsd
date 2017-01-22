@@ -152,10 +152,12 @@ int main(int argc, const char **argv) {
     if (isPETarget(args))
       return !mingw::link(args, canExitEarly(), llvm::outs(), llvm::errs());
     return !elf::link(args, canExitEarly(), llvm::outs(), llvm::errs());
+#ifndef __OpenBSD__
   case WinLink:
     return !coff::link(args, canExitEarly(), llvm::outs(), llvm::errs());
   case Darwin:
     return !mach_o::link(args, canExitEarly(), llvm::outs(), llvm::errs());
+#endif
   case Wasm:
     return !wasm::link(args, canExitEarly(), llvm::outs(), llvm::errs());
   default:
