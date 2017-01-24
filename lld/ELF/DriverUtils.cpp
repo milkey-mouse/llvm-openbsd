@@ -226,10 +226,38 @@ Optional<std::string> elf::findFromSearchPaths(StringRef path) {
 // This is for -l<basename>. We'll look for lib<basename>.so or lib<basename>.a from
 // search paths.
 Optional<std::string> elf::searchLibraryBaseName(StringRef name) {
+  if (name.startswith(":"))
+    return findFromSearchPaths(name.substr(1));
+
   for (StringRef dir : config->searchPaths) {
-    if (!config->isStatic)
+    if (!config->isStatic) {
       if (Optional<std::string> s = findFile(dir, "lib" + name + ".so"))
         return s;
+
+      const StringRef libName = (Twine("lib") + name + ".so.").str();
+      int maxMaj = -1, maxMin = -1;
+      std::error_code EC;
+      for (fs::directory_iterator LI(dir, EC), LE;
+	   LI != LE; LI = LI.increment(EC)) {
+        StringRef filePath = LI->path();
+	StringRef fileName = path::filename(filePath);
+	if (!(fileName.startswith(libName)))
+	  continue;
+	std::pair<StringRef, StringRef> majMin =
+	  fileName.substr(libName.size()).split('.');
+	int maj, min;
+	if (majMin.first.getAsInteger(10, maj) || maj < 0)
+	  continue;
+	if (majMin.second.getAsInteger(10, min) || min < 0)
+	  continue;
+	if (maj > maxMaj)
+	  maxMaj = maj, maxMin = min;
+	if (maxMaj == maj && min > maxMin)
+	  maxMin = min;
+      }
+      if (maxMaj >= 0)
+	return findFile(dir, libName + Twine(maxMaj) + "." + Twine(maxMin));
+    }
     if (Optional<std::string> s = findFile(dir, "lib" + name + ".a"))
       return s;
   }
