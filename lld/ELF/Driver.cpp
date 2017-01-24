@@ -986,7 +986,12 @@ static void readConfigs(opt::InputArgList &args) {
   config->optimize = args::getInteger(args, OPT_O, 1);
   config->orphanHandling = getOrphanHandling(args);
   config->outputFile = args.getLastArgValue(OPT_o);
+#ifdef __OpenBSD__
+  config->pie = args.hasFlag(OPT_pie, OPT_no_pie,
+      !args.hasArg(OPT_shared) && !args.hasArg(OPT_relocatable));
+#else
   config->pie = args.hasFlag(OPT_pie, OPT_no_pie, false);
+#endif
   config->printIcfSections =
       args.hasFlag(OPT_print_icf_sections, OPT_no_print_icf_sections, false);
   config->printGcSections =
