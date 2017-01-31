@@ -231,7 +231,8 @@ Optional<std::string> searchLibraryBaseName(StringRef name) {
       if (Optional<std::string> s = findFile(dir, "lib" + name + ".so"))
         return s;
 
-      const StringRef LibName = (Twine("lib") + Name + ".so.").str();
+      llvm::SmallString<128> Scratch;
+      const StringRef LibName = ("lib" + Name + ".so.").toStringRef(Scratch);
       int MaxMaj = -1, MaxMin = -1;
       std::error_code EC;
       for (fs::directory_iterator LI(Dir, EC), LE;
