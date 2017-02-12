@@ -7608,7 +7608,7 @@ def ext_typecheck_convert_incompatible_pointer_sign : ExtWarn<
   "sending to parameter of different type}0,1"
   "|%diff{casting $ to type $|casting between types}0,1}2"
   " converts between pointers to integer types with different sign">,
-  InGroup<DiagGroup<"pointer-sign">>;
+  InGroup<DiagGroup<"pointer-sign">>, DefaultIgnore;
 def err_typecheck_convert_incompatible_pointer_sign : Error<
   "%select{%diff{assigning to $ from $|assigning to different types}0,1"
   "|%diff{passing $ to parameter of type $|"
