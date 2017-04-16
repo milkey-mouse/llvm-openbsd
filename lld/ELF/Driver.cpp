@@ -85,7 +85,6 @@ bool elf::link(ArrayRef<const char *> args, bool canExitEarly,
       "too many errors emitted, stopping now (use "
       "-error-limit=0 to see all errors)";
   errorHandler().exitEarly = canExitEarly;
-  stderrOS.enable_colors(stderrOS.has_colors());
 
   inputSections.clear();
   outputSections.clear();
