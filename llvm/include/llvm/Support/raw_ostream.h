@@ -398,7 +398,7 @@ class raw_fd_ostream : public raw_pwrite_stream {
   int FD;
   bool ShouldClose;
   bool SupportsSeeking = false;
-  bool ColorEnabled = true;
+  bool ColorEnabled = false;
 
 #ifdef _WIN32
   /// True if this fd refers to a Windows console device. Mintty and other
