@@ -320,14 +320,6 @@ void X86AsmBackend::relaxInstruction(const MCInst &Inst,
 /// \return - true on success, false on failure
 bool X86AsmBackend::writeNopData(raw_ostream &OS, uint64_t Count) const {
 
-  // This CPU doesn't support long nops. If needed add more.
-  // FIXME: We could generated something better than plain 0x90.
-  if (!STI.getFeatureBits()[X86::FeatureNOPL]) {
-    for (uint64_t i = 0; i < Count; ++i)
-      OS << '\x90';
-    return true;
-  }
-
   // Write 1 or 2 byte NOP sequences, or a longer trapsled, until
   // we have written Count bytes
   do {
