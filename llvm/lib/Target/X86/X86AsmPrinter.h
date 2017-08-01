@@ -129,6 +129,8 @@ public:
 
   void EmitInstruction(const MachineInstr *MI) override;
 
+  void EmitTrapToAlignment(unsigned NumBits) const override;
+
   void EmitBasicBlockEnd(const MachineBasicBlock &MBB) override {
     AsmPrinter::EmitBasicBlockEnd(MBB);
     SMShadowTracker.emitShadowPadding(*OutStreamer, getSubtargetInfo());
