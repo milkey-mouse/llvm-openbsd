@@ -894,6 +894,8 @@ bool AsmParser::Run(bool NoInitialTextSection, bool NoFinalize) {
   AsmCond StartingCondState = TheCondState;
   SmallVector<AsmRewrite, 4> AsmStrRewrites;
 
+  StringRef Filename = getContext().getMainFileName();
+
   // If we are generating dwarf for assembly source files save the initial text
   // section.  (Don't use enabledGenDwarfForAssembly() here, as we aren't
   // emitting any actual debug info yet and haven't had a chance to parse any
@@ -909,6 +911,9 @@ bool AsmParser::Run(bool NoInitialTextSection, bool NoFinalize) {
     assert(InsertResult && ".text section should not have debug info yet");
     (void)InsertResult;
   }
+
+  if (!Filename.empty() && (Filename.compare(StringRef("-")) != 0))
+    Out.EmitFileDirective(Filename);
 
   // While we have input, parse each statement.
   while (Lexer.isNot(AsmToken::Eof)) {
