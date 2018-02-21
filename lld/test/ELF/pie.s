@@ -50,8 +50,10 @@
 # CHECK:      DynamicSection [
 # CHECK:        0x000000006FFFFFFB FLAGS_1 PIE
 
-## Check -nopie
+## Check -no-pie
 # RUN: ld.lld -no-pie %t1.o -o %t2
+# RUN: llvm-readobj --file-headers -r %t2 | FileCheck %s --check-prefix=NOPIE
+# RUN: ld.lld -nopie %t1.o -o %t2
 # RUN: llvm-readobj --file-headers -r %t2 | FileCheck %s --check-prefix=NOPIE
 # RUN: ld.lld -no-pic-executable %t1.o -o %t2
 # RUN: llvm-readobj --file-headers -r %t2 | FileCheck %s --check-prefix=NOPIE
