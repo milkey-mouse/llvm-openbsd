@@ -518,6 +518,7 @@ void X86PassConfig::addPreEmitPass() {
   addPass(createX86DiscriminateMemOpsPass());
   addPass(createX86InsertPrefetchPass());
   addPass(createX86InsertX87waitPass());
+  addPass(createX86FixupGadgetsPass());
 }
 
 void X86PassConfig::addPreEmitPass2() {
