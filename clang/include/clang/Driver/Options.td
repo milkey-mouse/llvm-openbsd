@@ -1774,6 +1774,10 @@ def fstack_protector : Flag<["-"], "fstack-protector">, Group<f_Group>,
            "if they contain a char (or 8bit integer) array or constant sized calls to "
            "alloca, which are of greater size than ssp-buffer-size (default: 8 bytes). "
            "All variable sized calls to alloca are considered vulnerable">;
+def fno_ret_protector : Flag<["-"], "fno-ret-protector">, Group<f_Group>,
+  HelpText<"Disable return protector">;
+def fret_protector : Flag<["-"], "fret-protector">, Group<f_Group>,
+  HelpText<"Enable return protector">;
 def ftrivial_auto_var_init : Joined<["-"], "ftrivial-auto-var-init=">, Group<f_Group>,
   Flags<[CC1Option, CoreOption]>, HelpText<"Initialize trivial automatic stack variables: uninitialized (default)"
   " | pattern">, Values<"uninitialized,pattern">;
