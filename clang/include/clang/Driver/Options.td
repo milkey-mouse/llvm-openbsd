@@ -1797,6 +1797,10 @@ def enable_trivial_var_init_zero : Flag<["-"], "enable-trivial-auto-var-init-zer
   HelpText<"Trivial automatic variable initialization to zero is only here for benchmarks, it'll eventually be removed, and I'm OK with that because I'm only using it to benchmark">;
 def ftrivial_auto_var_init_stop_after : Joined<["-"], "ftrivial-auto-var-init-stop-after=">, Group<f_Group>,
   Flags<[CC1Option, CoreOption]>, HelpText<"Stop initializing trivial automatic stack variables after the specified number of instances">;
+def fno_ret_protector : Flag<["-"], "fno-ret-protector">, Group<f_Group>,
+  HelpText<"Disable return protector">;
+def fret_protector : Flag<["-"], "fret-protector">, Group<f_Group>,
+  HelpText<"Enable return protector">;
 def fstandalone_debug : Flag<["-"], "fstandalone-debug">, Group<f_Group>, Flags<[CoreOption]>,
   HelpText<"Emit full debug info for all types used by the program">;
 def fno_standalone_debug : Flag<["-"], "fno-standalone-debug">, Group<f_Group>, Flags<[CoreOption]>,
