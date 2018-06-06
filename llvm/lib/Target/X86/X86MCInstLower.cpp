@@ -1786,6 +1786,16 @@ void X86AsmPrinter::EmitInstruction(const MachineInstr *MI) {
         MCInstBuilder(X86::MOV64rr).addReg(X86::R10).addReg(X86::RAX));
     return;
 
+  case X86::RETGUARD_JMP_TRAP: {
+    MCSymbol *RGSuccSym = OutContext.createTempSymbol();
+    const MCExpr *RGSuccExpr = MCSymbolRefExpr::create(RGSuccSym, OutContext);
+    EmitAndCountInstruction(MCInstBuilder(X86::JE_1).addExpr(RGSuccExpr));
+    EmitAndCountInstruction(MCInstBuilder(X86::INT3));
+    EmitAndCountInstruction(MCInstBuilder(X86::INT3));
+    OutStreamer->EmitLabel(RGSuccSym);
+    return;
+  }
+
   case X86::SEH_PushReg:
   case X86::SEH_SaveReg:
   case X86::SEH_SaveXMM:
