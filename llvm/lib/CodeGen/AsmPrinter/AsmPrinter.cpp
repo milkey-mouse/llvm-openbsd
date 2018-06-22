@@ -3047,10 +3047,16 @@ void AsmPrinter::emitBasicBlockStart(const MachineBasicBlock &MBB) {
     }
   }
 
+  MCCodePaddingContext Context;
+  setupCodePaddingContext(MBB, Context);
   // Emit an alignment directive for this block, if needed.
   const Align Alignment = MBB.getAlignment();
-  if (Alignment != Align(1))
-    emitAlignment(Alignment);
+  if (Alignment != Align(1)) {
+    if (Context.IsBasicBlockReachableViaFallthrough)
+      emitAlignment(Alignment);
+    else
+      emitTrapAlignment(Alignment);
+  }
 
   // If the block has its address taken, emit any labels that were used to
   // reference the block.  It is possible that there is more than one label
