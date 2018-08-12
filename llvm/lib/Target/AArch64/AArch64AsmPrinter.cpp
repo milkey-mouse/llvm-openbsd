@@ -1047,6 +1047,19 @@ void AArch64AsmPrinter::EmitInstruction(const MachineInstr *MI) {
       MovK.addOperand(MCOperand::createImm(0));
       EmitToStreamer(*OutStreamer, MovK);
       return;
+
+    case AArch64::RETGUARD_JMP_TRAP:
+      {
+      MCSymbol *RGSuccSym = OutContext.createTempSymbol();
+      /* Compare and branch */
+      EmitToStreamer(*OutStreamer, MCInstBuilder(AArch64::CBZX)
+          .addReg(MI->getOperand(0).getReg())
+          .addExpr(MCSymbolRefExpr::create(RGSuccSym, OutContext)));
+      EmitToStreamer(*OutStreamer, MCInstBuilder(AArch64::BRK).addImm(1));
+      OutStreamer->EmitLabel(RGSuccSym);
+      return;
+      }
+
   }
   case AArch64::MOVIv2d_ns:
     // If the target has <rdar://problem/16473581>, lower this
