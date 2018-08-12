@@ -124,6 +124,7 @@ add_llvm_library(LLVMCodeGen
   RegUsageInfoCollector.cpp
   RegUsageInfoPropagate.cpp
   ResetMachineFunctionPass.cpp
+  ReturnProtectorLowering.cpp
   ReturnProtectorPass.cpp
   SafeStack.cpp
   SafeStackColoring.cpp
