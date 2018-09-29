@@ -1066,8 +1066,9 @@ static bool canDefineSymbolInExecutable(Symbol &sym) {
   // executable will preempt it.
   // Note that we want the visibility of the shared symbol itself, not
   // the visibility of the symbol in the output file we are producing. That is
-  // why we use Sym.stOther.
-  if ((sym.stOther & 0x3) == STV_DEFAULT)
+  // why we use Sym.StOther.
+  uint8_t OtherVisibility = sym.StOther & 0x3;
+  if (OtherVisibility == STV_DEFAULT || OtherVisibility == STV_PROTECTED)
     return true;
 
   // If we are allowed to break address equality of functions, defining
