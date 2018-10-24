@@ -293,6 +293,7 @@ void addReservedSymbols() {
   };
 
   ElfSym::bss = add("__bss_start", 0);
+  ElfSym::data = Add("__data_start", 0);
   ElfSym::end1 = add("end", -1);
   ElfSym::end2 = add("_end", -1);
   ElfSym::etext1 = add("etext", -1);
@@ -1108,6 +1109,9 @@ template <class ELFT> void Writer<ELFT>::setReservedSymbolSections() {
 
   if (ElfSym::bss)
     ElfSym::bss->section = findSection(".bss");
+
+  if (ElfSym::data)
+    ElfSym::data->Section = findSection(".data");
 
   // Setup MIPS _gp_disp/__gnu_local_gp symbols which should
   // be equal to the _gp symbol's value.
