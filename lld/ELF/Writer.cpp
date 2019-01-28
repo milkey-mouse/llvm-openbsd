@@ -2509,6 +2509,23 @@ template <class ELFT> void Writer<ELFT>::fixSectionAlignments() {
     }
   };
 
+#ifdef __OpenBSD__
+  auto NXAlign = [](OutputSection *cmd) {
+    if (cmd && !cmd->addrExpr)
+      cmd->addrExpr = [=] {
+        return alignTo(script->getDot(), 0x20000000);
+      };
+  };
+
+  PhdrEntry *firstRW = nullptr;
+  for (PhdrEntry *p : phdrs)
+    if (p->p_type == PT_LOAD && (p->p_flags & PF_W))
+      firstRW = p;
+
+  if (config->eMachine == EM_386 && firstRW)
+    NXAlign(firstRW->firstSec);
+#endif
+
   for (Partition &part : partitions) {
     prev = nullptr;
     for (const PhdrEntry *p : part.phdrs)
