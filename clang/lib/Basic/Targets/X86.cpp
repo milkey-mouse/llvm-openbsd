@@ -308,6 +308,8 @@ bool X86TargetInfo::handleTargetFeatures(std::vector<std::string> &Features,
       HasSERIALIZE = true;
     } else if (Feature == "+tsxldtrk") {
       HasTSXLDTRK = true;
+    } else if (Feature == "+save-args") {
+      HasSaveArgs = true;
     }
 
     X86SSEEnum Level = llvm::StringSwitch<X86SSEEnum>(Feature)
@@ -944,6 +946,7 @@ bool X86TargetInfo::hasFeature(StringRef Feature) const {
       .Case("retpoline-external-thunk", HasRetpolineExternalThunk)
       .Case("rtm", HasRTM)
       .Case("sahf", HasLAHFSAHF)
+      .Case("save-args", HasSaveArgs)
       .Case("serialize", HasSERIALIZE)
       .Case("sgx", HasSGX)
       .Case("sha", HasSHA)

@@ -130,6 +130,7 @@ class LLVM_LIBRARY_VISIBILITY X86TargetInfo : public TargetInfo {
   bool HasAMXBF16 = false;
   bool HasSERIALIZE = false;
   bool HasTSXLDTRK = false;
+  bool HasSaveArgs = false;
 
 protected:
   llvm::X86::CPUKind CPU = llvm::X86::CK_None;
