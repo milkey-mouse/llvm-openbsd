@@ -1778,6 +1778,10 @@ def fno_ret_protector : Flag<["-"], "fno-ret-protector">, Group<f_Group>,
   HelpText<"Disable return protector">;
 def fret_protector : Flag<["-"], "fret-protector">, Group<f_Group>,
   HelpText<"Enable return protector">;
+def fno_fixup_gadgets : Flag<["-"], "fno-fixup-gadgets">, Group<f_Group>,
+  HelpText<"Disable FixupGadgets pass (x86 only)">;
+def ffixup_gadgets : Flag<["-"], "ffixup-gadgets">, Group<f_Group>,
+  HelpText<"Replace ROP friendly instructions with safe alternatives (x86 only)">;
 def ftrivial_auto_var_init : Joined<["-"], "ftrivial-auto-var-init=">, Group<f_Group>,
   Flags<[CC1Option, CoreOption]>, HelpText<"Initialize trivial automatic stack variables: uninitialized (default)"
   " | pattern">, Values<"uninitialized,pattern">;
