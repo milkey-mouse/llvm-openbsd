@@ -2425,7 +2425,7 @@ void AArch64FrameLowering::determineCalleeSaves(MachineFunction &MF,
       SpillEstimate++;
   }
 
-  if (MFI.hasReturnProtectorRegister() && MFI.getReturnProtectorNeedsStore()) {
+  if (MFI.hasReturnProtectorRegister() && true) {
     SavedRegs.set(MFI.getReturnProtectorRegister());
     SpillEstimate++;
   }
