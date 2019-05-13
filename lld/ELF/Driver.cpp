@@ -353,7 +353,8 @@ static bool isKnownZFlag(StringRef S) {
          S == "keep-text-section-prefix" || S == "lazy" || S == "muldefs" ||
          S == "nocombreloc" || S == "nocopyreloc" || S == "nodefaultlib" ||
          S == "nodelete" || S == "nodlopen" || S == "noexecstack" ||
-         S == "nokeep-text-section-prefix" || S == "norelro" || S == "notext" ||
+         S == "nokeep-text-section-prefix" || S == "norelro" ||
+         S == "noretpolineplt" || S == "notext" ||
          S == "now" || S == "origin" || S == "relro" || S == "retpolineplt" ||
          S == "rodynamic" || S == "text" || S == "wxneeded" ||
          S.startswith("max-page-size=") || S.startswith("stack-size=");
@@ -887,7 +888,11 @@ void LinkerDriver::readConfigs(opt::InputArgList &Args) {
   Config->ZNow = getZFlag(Args, "now", "lazy", false);
   Config->ZOrigin = hasZOption(Args, "origin");
   Config->ZRelro = getZFlag(Args, "relro", "norelro", true);
-  Config->ZRetpolineplt = hasZOption(Args, "retpolineplt");
+#ifndef __OpenBSD__
+  Config->ZRetpolineplt = getZFlag(Args, "retpolineplt", "noretpolineplt", false);
+#else
+  Config->ZRetpolineplt = getZFlag(Args, "retpolineplt", "noretpolineplt", true);
+#endif
   Config->ZRodynamic = hasZOption(Args, "rodynamic");
   Config->ZStackSize = args::getZOptionValue(Args, OPT_z, "stack-size", 0);
   Config->ZText = getZFlag(Args, "text", "notext", true);
