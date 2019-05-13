@@ -439,7 +439,8 @@ static bool isKnownZFlag(StringRef s) {
          s == "nocombreloc" || s == "nocopyreloc" || s == "nodefaultlib" ||
          s == "nodelete" || s == "nodlopen" || s == "noexecstack" ||
          s == "nognustack" || s == "nokeep-text-section-prefix" ||
-         s == "norelro" || s == "noseparate-code" || s == "notext" ||
+         s == "norelro" || s == "noretpolineplt" ||
+         s == "noseparate-code" || s == "notext" ||
          s == "now" || s == "origin" || s == "pac-plt" || s == "rel" ||
          s == "rela" || s == "relro" || s == "retpolineplt" ||
          s == "rodynamic" || s == "shstk" || s == "text" || s == "undefs" ||
@@ -1066,7 +1067,11 @@ static void readConfigs(opt::InputArgList &args) {
   config->zOrigin = hasZOption(args, "origin");
   config->zPacPlt = hasZOption(args, "pac-plt");
   config->zRelro = getZFlag(args, "relro", "norelro", true);
-  config->zRetpolineplt = hasZOption(args, "retpolineplt");
+#ifndef __OpenBSD__
+  config->zRetpolineplt = getZFlag(args, "retpolineplt", "noretpolineplt", false);
+#else
+  config->zRetpolineplt = getZFlag(args, "retpolineplt", "noretpolineplt", true);
+#endif
   config->zRodynamic = hasZOption(args, "rodynamic");
   config->zSeparate = getZSeparate(args);
   config->zShstk = hasZOption(args, "shstk");
