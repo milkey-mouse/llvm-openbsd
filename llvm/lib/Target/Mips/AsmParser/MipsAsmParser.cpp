@@ -3709,6 +3709,10 @@ void MipsAsmParser::expandMem16Inst(MCInst &Inst, SMLoc IDLoc, MCStreamer &Out,
                    TmpReg, BaseReg, IDLoc, STI);
     emitInstWithOffset(MCOperand::createImm(int16_t(LoOffset)));
     return;
+  } else if (inPicMode()) {
+    expandLoadAddress(TmpReg, Mips::NoRegister, OffsetOp, !ABI.ArePtrs64bit(),
+                      IDLoc, Out, STI);
+    TOut.emitRRI(Inst.getOpcode(), DstReg, TmpReg, 0, IDLoc, STI);
   }
 
   if (OffsetOp.isExpr()) {
