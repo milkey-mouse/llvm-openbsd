@@ -309,7 +309,8 @@ AArch64TargetMachine::AArch64TargetMachine(const Target &T, const Triple &TT,
   // MachO/CodeModel::Large, which GlobalISel does not support.
   if (getOptLevel() <= EnableGlobalISelAtO &&
       TT.getArch() != Triple::aarch64_32 &&
-      !(getCodeModel() == CodeModel::Large && TT.isOSBinFormatMachO())) {
+      !(getCodeModel() == CodeModel::Large && TT.isOSBinFormatMachO()) &&
+      !getTargetTriple().isOSOpenBSD()) {
     setGlobalISel(true);
     setGlobalISelAbort(GlobalISelAbortMode::Disable);
   }
