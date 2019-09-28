@@ -82,6 +82,9 @@ public:
   void AddCXXStdlibLibArgs(const llvm::opt::ArgList &Args,
                            llvm::opt::ArgStringList &CmdArgs) const override;
 
+  std::string getCompilerRT(const llvm::opt::ArgList &Args, StringRef Component,
+                            bool Shared = false) const override;
+
   unsigned GetDefaultStackProtectorLevel(bool KernelOrKext) const override {
     return 2;
   }
