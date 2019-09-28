@@ -16,6 +16,7 @@
 #include "clang/Driver/Options.h"
 #include "clang/Driver/SanitizerArgs.h"
 #include "llvm/Option/ArgList.h"
+#include "llvm/Support/Path.h"
 
 using namespace clang::driver;
 using namespace clang::driver::tools;
@@ -344,4 +345,12 @@ void OpenBSD::addClangTargetOptions(const ArgList &DriverArgs,
   if (!DriverArgs.hasFlag(options::OPT_fuse_init_array,
                           options::OPT_fno_use_init_array, false))
     CC1Args.push_back("-fno-use-init-array");
+}
+
+std::string OpenBSD::getCompilerRT(const ArgList &Args,
+                                   StringRef Component,
+                                   FileType Type) const {
+  SmallString<128> P(getDriver().SysRoot);
+  llvm::sys::path::append(P, "/usr/lib/libcompiler_rt.a");
+  return std::string(P);
 }
