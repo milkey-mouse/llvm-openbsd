@@ -17,6 +17,7 @@
 #include "clang/Driver/Options.h"
 #include "clang/Driver/SanitizerArgs.h"
 #include "llvm/Option/ArgList.h"
+#include "llvm/Support/Path.h"
 
 using namespace clang::driver;
 using namespace clang::driver::tools;
@@ -335,3 +336,11 @@ Tool *OpenBSD::buildAssembler() const {
 }
 
 Tool *OpenBSD::buildLinker() const { return new tools::openbsd::Linker(*this); }
+
+std::string OpenBSD::getCompilerRT(const ArgList &Args,
+                                   StringRef Component,
+                                   bool Shared) const {
+  SmallString<128> P(getDriver().SysRoot);
+  llvm::sys::path::append(P, "/usr/lib/libcompiler_rt.a");
+  return P.str();
+}
