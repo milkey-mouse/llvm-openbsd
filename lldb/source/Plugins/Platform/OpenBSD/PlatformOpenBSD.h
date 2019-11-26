@@ -56,6 +56,8 @@ public:
                                   unsigned flags, lldb::addr_t fd,
                                   lldb::addr_t offset) override;
 
+  lldb_private::FileSpec LocateExecutable(const char *basename) override;
+
 private:
   PlatformOpenBSD(const PlatformOpenBSD &) = delete;
   const PlatformOpenBSD &operator=(const PlatformOpenBSD &) = delete;
