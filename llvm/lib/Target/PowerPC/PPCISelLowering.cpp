@@ -1239,7 +1239,10 @@ PPCTargetLowering::PPCTargetLowering(const PPCTargetMachine &TM,
 
   setOperationAction(ISD::READCYCLECOUNTER, MVT::i64, isPPC64 ? Legal : Custom);
 
-  if (!isPPC64) {
+  if (isPPC64)
+    setMaxAtomicSizeInBitsSupported(64);
+  else {
+    setMaxAtomicSizeInBitsSupported(32);
     setOperationAction(ISD::ATOMIC_LOAD,  MVT::i64, Expand);
     setOperationAction(ISD::ATOMIC_STORE, MVT::i64, Expand);
   }
