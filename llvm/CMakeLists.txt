@@ -606,7 +606,6 @@ include(HandleLLVMOptions)
 # Verify that we can find a Python 2 interpreter.  Python 3 is unsupported.
 # FIXME: We should support systems with only Python 3, but that requires work
 # on LLDB.
-set(Python_ADDITIONAL_VERSIONS 2.7)
 include(FindPythonInterp)
 if( NOT PYTHONINTERP_FOUND )
   message(FATAL_ERROR
