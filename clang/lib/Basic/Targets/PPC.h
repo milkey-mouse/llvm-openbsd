@@ -396,8 +396,8 @@ public:
     if (Triple.getOS() == llvm::Triple::AIX)
       SuitableAlign = 64;
 
-    if (Triple.isOSFreeBSD() || Triple.getOS() == llvm::Triple::AIX ||
-        Triple.isMusl()) {
+    if (Triple.isOSFreeBSD() || Triple.isOSOpenBSD() ||
+        Triple.getOS() == llvm::Triple::AIX || Triple.isMusl()) {
       LongDoubleWidth = LongDoubleAlign = 64;
       LongDoubleFormat = &llvm::APFloat::IEEEdouble();
     }
