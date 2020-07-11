@@ -420,6 +420,12 @@ public:
       LongDoubleFormat = &llvm::APFloat::IEEEdouble();
     }
 
+    if (Triple.isOSOpenBSD()) {
+      LongDoubleWidth = LongDoubleAlign = 64;
+      LongDoubleFormat = &llvm::APFloat::IEEEdouble();
+      ABI = "elfv2";
+    }
+
     // PPC64 supports atomics up to 8 bytes.
     MaxAtomicPromoteWidth = MaxAtomicInlineWidth = 64;
   }
